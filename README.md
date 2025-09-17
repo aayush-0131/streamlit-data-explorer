@@ -22,7 +22,7 @@ This tool provides a user-friendly interface to quickly get insights from a data
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/aayush-0131/csv-explorer.git](https://github.com/aayush-0131/csv-explorer.git)
+    git clone [https://github.com/aayush-0131/streamlit-data-explorer.git](https://github.com/aayush-0131/streamlit-data-explorer.git)
     cd csv-explorer
     ```
 
