@@ -1,0 +1,10 @@
+# Python Bytecode and Caches
+__pycache__/
+*.pyc
+
+# Virtual Environment Folder
+venv/
+.venv/
+
+# Streamlit-specific Folder (for config, etc.)
+.streamlit/
