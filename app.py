@@ -2,12 +2,23 @@ import streamlit as st
 import pandas as pd
 # Required for Excel support: pip install openpyxl
 
-# Set the title and a little bit of text for the app
-st.title("📊 Interactive CSV & Excel Data Explorer")
-st.write("Upload a CSV or Excel file and see some basic data analysis.")
+# Set the page configuration for a wider layout
+st.set_page_config(layout="wide")
 
-# Create the file uploader widget, accepting both csv and xlsx
-uploaded_file = st.file_uploader("Choose a file", type=["csv", "xlsx"])
+# --- Sidebar Controls ---
+
+# Add a title and some text to the sidebar
+st.sidebar.title("📊 Data Explorer Controls")
+st.sidebar.write("Upload a file and select your analysis options.")
+
+# Create the file uploader widget in the sidebar
+uploaded_file = st.sidebar.file_uploader("Choose a file", type=["csv", "xlsx"])
+
+
+# --- Main Page ---
+
+st.title("Interactive CSV & Excel Data Explorer")
+st.write("Upload a CSV or Excel file via the sidebar to begin.")
 
 # This block of code will only run if a file has been uploaded
 if uploaded_file is not None:
@@ -17,19 +28,15 @@ if uploaded_file is not None:
             df = pd.read_csv(uploaded_file)
         elif uploaded_file.name.endswith('.xlsx'):
             df = pd.read_excel(uploaded_file)
-        else:
-            st.error("Unsupported file type. Please upload a CSV or XLSX file.")
-            st.stop() # Stop the script if the file type is not supported
-            
+        
         # --- FIX: Convert 'object' columns to string ---
-        # This prevents errors with Streamlit's display library (PyArrow)
         for col in df.columns:
             if df[col].dtype == 'object':
                 df[col] = df[col].astype(str)
 
-        st.success("File uploaded successfully! Here's a look at your data.")
-
-        # --- Display Data and Summaries ---
+        st.success("File uploaded successfully! Here's your data analysis.")
+        
+        # --- Display Data and Summaries on the main page ---
         
         st.header("Data Preview")
         st.dataframe(df.head(10))
@@ -40,42 +47,42 @@ if uploaded_file is not None:
         st.header("Data Types")
         st.write(df.dtypes)
         
-        # --- Interactive Visualization ---
+        # --- Interactive Visualization moved to the sidebar ---
         
-        st.header("Visualize Data")
+        st.sidebar.header("Visualize Data")
         
-        # Get a list of all columns that have numeric data for plotting
+        # Get a list of all columns that have numeric data
         numeric_columns = df.select_dtypes(include=['int64', 'float64']).columns.tolist()
         
         if not numeric_columns:
-            st.warning("No numeric columns found in the data to plot.")
+            st.sidebar.warning("No numeric columns found to plot.")
         else:
-            # Add a dropdown to select the chart type
-            chart_type = st.selectbox(
+            # Add a dropdown to select the chart type in the sidebar
+            chart_type = st.sidebar.selectbox(
                 "Select Chart Type:",
                 ["Bar Chart (Histogram)", "Line Chart", "Scatter Plot"]
             )
 
-            # Conditional logic for displaying charts
-            
+            # Conditional logic for displaying charts on the main page
+            st.header("Data Visualization")
+
             if chart_type == "Bar Chart (Histogram)":
-                column_to_plot = st.selectbox("Select a column for the Bar Chart:", numeric_columns)
+                column_to_plot = st.sidebar.selectbox("Select a column:", numeric_columns)
                 st.subheader(f"Bar Chart for {column_to_plot}")
                 
-                # FIX: Get the counts and convert the index (labels) to strings
                 counts = df[column_to_plot].value_counts()
                 counts.index = counts.index.astype(str)
                 st.bar_chart(counts, use_container_width=True)
 
             elif chart_type == "Line Chart":
-                column_to_plot = st.selectbox("Select a column for the Line Chart:", numeric_columns)
+                column_to_plot = st.sidebar.selectbox("Select a column:", numeric_columns)
                 st.subheader(f"Line Chart for {column_to_plot}")
                 st.line_chart(df[column_to_plot], use_container_width=True)
 
             elif chart_type == "Scatter Plot":
                 st.subheader("Scatter Plot to compare two columns")
-                x_axis_col = st.selectbox("Select the X-axis column:", numeric_columns)
-                y_axis_col = st.selectbox("Select the Y-axis column:", numeric_columns)
+                x_axis_col = st.sidebar.selectbox("Select the X-axis:", numeric_columns)
+                y_axis_col = st.sidebar.selectbox("Select the Y-axis:", numeric_columns, index=min(1, len(numeric_columns)-1))
                 
                 st.scatter_chart(df, x=x_axis_col, y=y_axis_col, use_container_width=True)
 
