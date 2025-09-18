@@ -1,4 +1,6 @@
 # Interactive CSV & Excel Data Explorer
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://aayush-data-explorer.streamlit.app)
+
 
 A web application built with Streamlit and Pandas that allows users to upload a CSV or Excel file and perform basic data exploration.
 
@@ -22,7 +24,7 @@ This tool provides a user-friendly interface to quickly get insights from a data
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/your-username/csv-explorer.git](https://github.com/your-username/csv-explorer.git)
+    git clone [https://github.com/aayush-0131/streamlit-data-explorer.git](https://github.com/aayush-0131/streamlit-data-explorer.git)
     cd csv-explorer
     ```
 
